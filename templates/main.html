@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Items</title>
+		<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+	</head>
+	<body>
+		<header class="row container">
+			<h1 class="col-10">Catalog App!</h1>
+            <div class="button col-2">
+	            {% if logged_in_id != None %}
+	            <a href="/gdisconnect">logout</a>
+	            {% else %}
+	            <a href="/login">login</a>
+	            {% endif %}
+        	</div>
+        </header>
+    	<hr>
+    	{% for message in get_flashed_messages() %}
+    		{% if "WARNING" in message %}
+    		<div class="flash warning">{{message}}</div>
+    		{% else %}
+    		<div class="flash success">{{message}}</div>
+    		{% endif %}
+    	{% endfor %}
+		<div class="container row content">
+			{% block content %}
+			{% endblock %}
+		</div>
+		<a href="{{url_for('topPage')}}">Back to top</a>
+		<hr>
+		<div class="footer">&#169; 2016 Evan Weiss, LLC</div>
+	</body>
+</html>

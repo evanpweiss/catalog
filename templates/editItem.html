@@ -1,0 +1,31 @@
+{% extends "main.html" %}
+{% block content %}
+
+<h2>Edit Item!</h2>
+<form method = "post" enctype='multipart/form-data'>
+    <label>
+        <div>Name:</div>
+        <input type="text" name="name" value="{{item.name}}">
+    </label>
+    <br>
+    <label>
+        <div>Description:</div>
+        <textarea name="description">{{item.description}}</textarea>
+    </label>
+    <br>
+    <label>
+        <div>Category:</div>
+        <select name="category_id">
+            {% for category in categories %}
+                {% if category.id == item.category_id %}
+                <option value="{{category.id}}" selected>{{category.name}}</option>
+                {% else %}
+                <option value="{{category.id}}">{{category.name}}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    </label>
+    <input class="button" type="submit" value="Submit">
+</form>
+
+{% endblock %}

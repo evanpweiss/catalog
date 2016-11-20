@@ -1,0 +1,27 @@
+{% extends "main.html" %}
+{% block content %}
+
+<h2>Create a new Item!</h2>
+<form method = "post" enctype='multipart/form-data'>
+    <label>
+        <div>Name:</div>
+        <input type="text" name="name">
+    </label>
+    <br>
+    <label>
+        <div>Description:</div>
+        <textarea name="description"></textarea>
+    </label>
+    <br>
+    <label>
+        <div>Category:</div>
+        <select name="category_id">
+            {% for category in categories %}
+            <option value="{{category.id}}">{{category.name}}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <input type="submit" value="Submit">
+</form>
+
+{% endblock %}
