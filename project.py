@@ -300,6 +300,5 @@ def deleteItem(item_id):
 
 # set up Flask app
 if __name__ == '__main__':
-    app.secret_key = 'super_secret_key'
     app.debug = True
-    app.run(host='35.162.170.166', port=80)
+    app.run()

@@ -1,1 +1,4 @@
 eweiss_item_catalog.zip
+*.pyc
+*.db
+client_secrets.json
