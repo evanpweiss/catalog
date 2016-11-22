@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, jsonify, url_for, flash
 from sqlalchemy import create_engine, asc, desc
-from sqlalchemy.orm import sessionmaker
-from database_setup import Base, Category, Item, User
+from sqlalchemy.orm import Session
+from sqlalchemy.ext.automap import automap_base
 from flask import session as login_session
 import random
 import string
@@ -19,13 +19,18 @@ CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Item Catalog"
 
+# Set up automap
+Base = automap_base()
+engine = create_engine('postgresql+psycopg2://catalog:catalog@localhost/catalog')
+Base.prepare(engine, reflect=True)
+
+# Set up classes for each table in the database
+User = Base.classes.users
+Category = Base.classes.categories
+Item = Base.classes.items
 
 # Connect to Database and create database session
-engine = create_engine('sqlite:///new_catalog.db')
-Base.metadata.bind = engine
-
-DBSession = sessionmaker(bind=engine)
-session = DBSession()
+session = Session(engine)
 
 # User Helper Function
 def createUser(login_session):
