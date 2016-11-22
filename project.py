@@ -16,7 +16,7 @@ import bleach
 app = Flask(__name__)
 
 CLIENT_ID = json.loads(
-    open('client_secrets.json', 'r').read())['web']['client_id']
+    open('/var/www/catalog/client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Item Catalog"
 
 # Set up automap
@@ -77,7 +77,7 @@ def gconnect():
 
     try:
         # Upgrade the authorization code into a credentials object
-        oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
+        oauth_flow = flow_from_clientsecrets('/var/www/catalog/client_secrets.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
     except FlowExchangeError:
@@ -222,9 +222,7 @@ def render(html_template, **kw):
 @app.route('/catalog/')
 def topPage():
     categories = session.query(Category).order_by(asc(Category.name)).all()
-    ten_items = session.query(Item).join(
-        Category).order_by(desc(Item.id)).limit(10)
-    return render('top.html', categories=categories, items=ten_items, item_header="Latest Items")
+    return render('top.html', categories=categories, item_header="Latest Items")
 
 # Show all available items for a category
 @app.route('/catalog/catgegories/<int:category_id>/')
