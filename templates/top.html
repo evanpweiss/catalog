@@ -13,7 +13,7 @@
             </td>
             <td>
     			{% for item in items %}
-    			<p><a href="{{url_for('showItemDescription', item_id = item.id)}}">{{item.name}} ({{item.category.name}})</a></p>
+    			<p><a href="{{url_for('showItemDescription', item_id = item.id)}}">{{item.name}}</a></p>
     			{% endfor %}
                 {% if logged_in_id != None %}
                 <p class="newItem"><a href="{{url_for('newItem')}}">Add New Item</a></p>

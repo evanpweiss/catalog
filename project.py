@@ -13,21 +13,29 @@ from flask import make_response
 import requests
 import bleach
 
+env = 'vagrant'
+if env == 'vagrant':
+    secrets_path = 'client_secrets.json'
+
+if env == 'ec2':
+    secrets_path = '/var/www/catalog/client_secrets.json'
+
 app = Flask(__name__)
 
 CLIENT_ID = json.loads(
-    open('client_secrets.json', 'r').read())['web']['client_id']
+    open(secrets_path, 'r').read())['web']['client_id']
 APPLICATION_NAME = "Item Catalog"
 
 # Set up automap
 Base = automap_base()
-engine = create_engine('postgresql+psycopg2://catalog:catalog@localhost/catalog')
+engine = create_engine('postgresql+psycopg2://catalog_user:catalog@localhost/catalog')
 Base.prepare(engine, reflect=True)
 
-# Set up classes for each table in the database
+
+# Set up classes for each table in catalog db
+Item = Base.classes.item_table
 User = Base.classes.users
 Category = Base.classes.categories
-Item = Base.classes.items
 
 # Connect to Database and create database session
 session = Session(engine)
@@ -77,7 +85,7 @@ def gconnect():
 
     try:
         # Upgrade the authorization code into a credentials object
-        oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
+        oauth_flow = flow_from_clientsecrets(secrets_path, scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
     except FlowExchangeError:
@@ -222,8 +230,7 @@ def render(html_template, **kw):
 @app.route('/catalog/')
 def topPage():
     categories = session.query(Category).order_by(asc(Category.name)).all()
-    ten_items = session.query(Item).join(
-        Category).order_by(desc(Item.id)).limit(10)
+    ten_items = session.query(Item).order_by(desc(Item.id)).limit(10)
     return render('top.html', categories=categories, items=ten_items, item_header="Latest Items")
 
 # Show all available items for a category
@@ -303,7 +310,17 @@ def deleteItem(item_id):
     else:
         return render('deleteItem.html', item=itemToDelete)
 
-# set up Flask app
-if __name__ == '__main__':
-    app.debug = True
-    app.run()
+if env == 'vagrant':
+
+    # set up Flask app
+    if __name__ == '__main__':
+        app.secret_key = "super_secret_key"
+        app.debug = True
+        app.run(host="0.0.0.0", port=5000)
+
+if env == 'ec2':
+
+    # set up Flask app
+    if __name__ == '__main__':
+        app.debug = True
+        app.run()
