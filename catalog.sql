@@ -18,7 +18,7 @@ CREATE TABLE categories (
     name text
     );
 
-CREATE TABLE items (
+CREATE TABLE item_table (
     id serial PRIMARY KEY,
     name text,
     description text,
