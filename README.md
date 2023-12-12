@@ -1,4 +1,4 @@
-# Linux Server Configuration:  Hosting Item Catalog
+# Linux Server Configuration:  Hosting Item Catalog (wake up!)
 
 The goal of the Linux Server Configuration project is to configure an Amazon EC2 server to host a database-backed web application.  The requirements for this project are described [here] (https://review.udacity.com/#!/rubrics/7/view).  The hosted application is built using Flask backed by a PostgreSQL database.  It makes extensive use of the sqlalchemy ORM to query the database.
 
